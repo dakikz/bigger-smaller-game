@@ -8,25 +8,40 @@ const countriesArr = [
 ];
 
 let allCountries = countriesArr.map((x) => {
-  let rObj = {};
-  rObj[x.country] = x.population;
-  return rObj;
+  let mappedObject = { country: "", population: "" };
+  mappedObject.country = x.country;
+  mappedObject.population = x.population.replace(/,/g, "");
+  return mappedObject;
 });
 
-const randomCountry = (x) => {
-  x = Math.floor(Math.random() * countriesArr.length);
+const randomCountry = () => {
+  let x = Math.floor(Math.random() * countriesArr.length); // pou to 0 ws to 5
   return allCountries[x];
 };
 
-console.log(randomCountry());
+let item = randomCountry();
+let item2 = randomCountry();
 
-document.getElementById("mainGame").innerHTML = JSON.stringify(randomCountry());
-let objA = {
-  name: "christina",
-  degree: "music",
-  instrument: "flute",
-};
-
-for (let key in objA) {
-  console.log(key + ":", objA[key]);
+if (item === item2) {
+  item2 = randomCountry();
 }
+
+//TODO: Prepei na fefkei pou to array to item pou edeikse idi
+const clicked1 = () => {
+  if (item.population > item2.population) {
+    console.log("YOU WON!");
+  } else {
+    console.log("You lost...");
+  }
+  item = randomCountry();
+  document.getElementById("country1").innerHTML = item.country;
+};
+const clicked2 = () => {
+  if (item.population < item2.population) {
+    console.log("YOU WON!");
+  } else {
+    console.log("You lost...");
+  }
+  item2 = randomCountry();
+  document.getElementById("country2").innerHTML = item2.country;
+};

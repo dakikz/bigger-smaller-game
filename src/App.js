@@ -39,7 +39,15 @@ const ImageContainer = styled.div`
     height: auto;
   }
 `;
-
+const VSbadge = styled.div`
+  position: absolute;
+  bottom: -35px;
+  color: red;
+  font-size: 35px;
+  background-color: #cccccc;
+  border-radius: 100px;
+  padding: 12px;
+`;
 const ButtonCustom = styled.button`
   border: 2px solid #cccccc;
   background-color: #cccccc;
@@ -157,16 +165,7 @@ function App() {
             <p>has</p>
             <h3>{countriesResponse[numberA].population.toLocaleString()}</h3>
             <p>current population</p>
-            <p
-              style={{
-                position: "absolute",
-                bottom: "-23px",
-                color: "red",
-                fontSize: "35px",
-              }}
-            >
-              VS
-            </p>
+            <VSbadge>VS</VSbadge>
           </CountryBoxA>
           <CountryBoxB>
             <h2>{countriesResponse[numberB].name}</h2>

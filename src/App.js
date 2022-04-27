@@ -67,8 +67,10 @@ function App() {
   const [numberA, setNumberA] = useState();
   const [numberB, setNumberB] = useState();
   const isReady = useRef(false);
+  const [gameIsLoaded, setGameIsLoaded] = useState(false);
+  const appContainer = useRef();
 
-  const url = "https://restcountries.com/v2/all";
+  const url = "https://restcountries.com/v3/all";
 
   useEffect(() => {
     fetch(url)
@@ -77,7 +79,7 @@ function App() {
         isReady.current = false;
       })
       .then((res) => {
-        // console.log(res);
+        console.log(res);
         setCountriesResponse(res);
         let randomNumber = Math.floor(Math.random() * res.length);
         setNumberA(randomNumber);
@@ -100,14 +102,16 @@ function App() {
       let newCountry = Math.floor(
         Math.random() *
           countriesResponse
-            .map((x) => x.name)
-            .filter((x) => countriesResponse.map((x) => x.name).indexOf(x) > -1)
-            .length
+            .map((x) => x.name.official)
+            .filter(
+              (x) =>
+                countriesResponse.map((x) => x.name.official).indexOf(x) > -1
+            ).length
       );
       setNumberA(numberB);
       setNumberB(newCountry);
       let checkedArray = [...checkedCountries];
-      checkedArray.push(countriesResponse[newCountry].name);
+      checkedArray.push(countriesResponse[newCountry].name.official);
       setCheckedCountries(checkedArray);
     } else {
       console.log("lose");
@@ -124,13 +128,15 @@ function App() {
       let newCountry = Math.floor(
         Math.random() *
           countriesResponse
-            .map((x) => x.name)
-            .filter((x) => countriesResponse.map((x) => x.name).indexOf(x) > -1)
-            .length
+            .map((x) => x.name.official)
+            .filter(
+              (x) =>
+                countriesResponse.map((x) => x.name.official).indexOf(x) > -1
+            ).length
       );
       setNumberB(newCountry);
       let checkedArray = [...checkedCountries];
-      checkedArray.push(countriesResponse[newCountry].name);
+      checkedArray.push(countriesResponse[newCountry].name.official);
       setCheckedCountries(checkedArray);
     } else {
       console.log("lose");
@@ -139,53 +145,73 @@ function App() {
   };
 
   return (
-    <div className="App">
-      {!isReady.current && <p>Loading...</p>}
-      {isReady.current && (
-        <ComparisonOuter>
-          <CountryBoxA>
-            <h2>{countriesResponse[numberA].name}</h2>
-            <p
-              style={{
-                position: "absolute",
-                top: "5px",
-                right: "15px",
-                fontWeight: "600",
-                color: "red",
-              }}
-            >
-              Score: {checkedCountries.length}
-            </p>
-            <ImageContainer>
-              <img
-                src={countriesResponse[numberA].flags.svg}
-                alt={`${countriesResponse[numberA].name} flag`}
-              />
-            </ImageContainer>
-            <p>has</p>
-            <h3>{countriesResponse[numberA].population.toLocaleString()}</h3>
-            <p>current population</p>
-            <VSbadge>VS</VSbadge>
-          </CountryBoxA>
-          <CountryBoxB>
-            <h2>{countriesResponse[numberB].name}</h2>
-            <ImageContainer>
-              <img
-                src={countriesResponse[numberB].flags.svg}
-                alt={`${countriesResponse[numberA].name} flag`}
-              />
-            </ImageContainer>
-            <p>has</p>
-            <ButtonCustom onClick={more}>More</ButtonCustom>
-            <p>or</p>
-            <ButtonCustom onClick={less}>Less</ButtonCustom>
-            <p>
-              than <strong>{countriesResponse[numberA].name}</strong>
-            </p>
+    <div className="App" ref={appContainer}>
+      {gameIsLoaded ? (
+        <div>
+          {!isReady.current && <p>Loading...</p>}
+          {isReady.current && (
+            <ComparisonOuter>
+              <CountryBoxA>
+                <h2>{countriesResponse[numberA].name.official}</h2>
+                <p
+                  style={{
+                    position: "absolute",
+                    top: "5px",
+                    right: "15px",
+                    fontWeight: "600",
+                    color: "red",
+                  }}
+                >
+                  Score: {checkedCountries.length}
+                </p>
+                <ImageContainer>
+                  <img
+                    src={countriesResponse[numberA].flags[0]}
+                    alt={`${countriesResponse[numberA].name.official} flag`}
+                  />
+                </ImageContainer>
+                <p>has</p>
+                <h3>
+                  {countriesResponse[numberA].population.toLocaleString()}
+                </h3>
+                <p>current population</p>
+                <VSbadge>VS</VSbadge>
+              </CountryBoxA>
+              <CountryBoxB>
+                <h2>{countriesResponse[numberB].name.official}</h2>
+                <ImageContainer>
+                  <img
+                    src={countriesResponse[numberB].flags[0]}
+                    alt={`${countriesResponse[numberA].name.official} flag`}
+                  />
+                </ImageContainer>
+                <p>has</p>
+                <ButtonCustom onClick={more}>More</ButtonCustom>
+                <p>or</p>
+                <ButtonCustom onClick={less}>Less</ButtonCustom>
+                <p>
+                  than{" "}
+                  <strong>{countriesResponse[numberA].name.official}</strong>
+                </p>
 
-            <h3>{countriesResponse[numberB].population.toLocaleString()}</h3>
-          </CountryBoxB>
-        </ComparisonOuter>
+                <h3>
+                  {countriesResponse[numberB].population.toLocaleString()}
+                </h3>
+              </CountryBoxB>
+            </ComparisonOuter>
+          )}
+        </div>
+      ) : (
+        <div>
+          <h2
+            onClick={() => {
+              setGameIsLoaded(true);
+              console.log(appContainer.current.clientHeight);
+            }}
+          >
+            Start game
+          </h2>
+        </div>
       )}
     </div>
   );

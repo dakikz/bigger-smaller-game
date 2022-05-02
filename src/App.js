@@ -61,6 +61,18 @@ const ButtonCustom = styled.button`
     color: #cccccc;
   }
 `;
+
+const StartScreen = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+`;
+const StartButton = styled.button`
+  padding: 5px 10px;
+  cursor: pointer;
+`;
+
 function App() {
   const [countriesResponse, setCountriesResponse] = useState(null);
   const [checkedCountries, setCheckedCountries] = useState([]);
@@ -79,7 +91,7 @@ function App() {
         isReady.current = false;
       })
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         setCountriesResponse(res);
         let randomNumber = Math.floor(Math.random() * res.length);
         setNumberA(randomNumber);
@@ -202,16 +214,16 @@ function App() {
           )}
         </div>
       ) : (
-        <div>
-          <h2
+        <StartScreen>
+          <StartButton
             onClick={() => {
               setGameIsLoaded(true);
               console.log(appContainer.current.clientHeight);
             }}
           >
             Start game
-          </h2>
-        </div>
+          </StartButton>
+        </StartScreen>
       )}
     </div>
   );
